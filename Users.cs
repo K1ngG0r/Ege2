@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -20,7 +21,7 @@ namespace Ege
             ListUsers = new List<User>();
         }
 
-        private int AccauntExist(string login)
+        public int AccauntExist(string login)
         {
             if (ListUsers == null) 
                 return -1;
@@ -36,11 +37,11 @@ namespace Ege
             return -1;
         }
 
-        public User CreateAccaunt()
+        public User CreateAccaunt(bool isAdm)
         {
             User user = new User();
 
-            user = User.CreateAccaunt(AccauntExist);
+            user = User.CreateAccaunt(AccauntExist, isAdm);
 
             ListUsers.Add(user);
 
@@ -54,9 +55,10 @@ namespace Ege
             Console.Write("Enter login: ");
             string login  = Console.ReadLine();
 
-            if(AccauntExist(login) == -1)
+            while(AccauntExist(login) == -1)
             {
-                Console.WriteLine("There is no such login, try another one.");
+                Console.Write("There is no such login, try another one.\n" +
+                    "Enter login: ");
 
                 login = Console.ReadLine();
             }
@@ -68,7 +70,8 @@ namespace Ege
 
             while (password != ListUsers[poss].Password)
             {
-                Console.WriteLine("Incorrect password, please try again.");
+                Console.Write("Incorrect password, please try again.\n" +
+                    "Enter password: ");
                 password = Console.ReadLine();
             }
 
@@ -100,7 +103,5 @@ namespace Ege
                 }
             }
         }
-
-
     }
 }

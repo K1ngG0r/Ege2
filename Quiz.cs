@@ -78,7 +78,7 @@ namespace Ege
 
         public int Passing()
         {
-            Console.WriteLine(Theme);
+            Console.WriteLine($"{Theme, 50}");
 
             int passing = 0;
 

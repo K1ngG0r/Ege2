@@ -52,7 +52,7 @@ namespace Ege
                     return users.LogIn();
 
                 case "2":
-                    return users.CreateAccaunt();
+                    return users.CreateAccaunt(false);
 
                 default:
                     Console.WriteLine("Unknown command, try again");
@@ -65,6 +65,31 @@ namespace Ege
             return null;
         }
 
+        static public void MainMenu()
+        {
+            Logo();
+
+            Console.WriteLine("\n1)Start new quiz" +
+                "\n2)Show results" +
+                "\n3)Show the Top 20 for a specific quiz" +
+                "\n4)Change settings" +
+                "\n5)Exit");
+        }
+
+        static public void AdminMenu()
+        {
+            Logo();
+
+            Console.WriteLine("\n1)Start new quiz" +
+                "\n2)Show results" +
+                "\n3)Show the Top 20 for a specific quiz" +
+                "\n4)Change settings" +
+                "\n5)Create quiz" +
+                "\n6)Crate admin accaunt" +
+                "\n7)Delete accaunt" +
+                "\n7)Exit");
+        }
+
         static void Main(string[] args)
         {
             try
@@ -72,19 +97,67 @@ namespace Ege
                 Users listUsers = new Users();
                 Quizzes quizzes = new Quizzes();
 
-                User user = new User();
+                User user = new User(); 
 
                 listUsers.Load("data/usr/");
+                quizzes.Load("data/test/");
 
-                //user = Registration(listUsers);
+                user = Registration(listUsers);
 
-                Quiz quiz = Quiz.Load("data/test/quiz.bin");
+                while (true)
+                {
+                    Console.Clear();
+                    MainMenu();
 
-                quizzes.Add(quiz);
+                    string choise = Console.ReadLine();
 
-                quiz.Passing();
+                    switch(choise)
+                    {
+                        case "1":
+                            Console.WriteLine(quizzes);
 
-                listUsers.Save("data/usr/");
+                            Console.Write("\nEnter item name: ");
+                            string itemName = Console.ReadLine();
+
+                            int res = quizzes.Test(itemName);
+
+                            user.AddSuccesses(itemName, res);
+                            break;
+
+                        case "2":
+                            user.PrintSuccesses();
+                            Console.WriteLine("Press any button");
+                            Console.ReadKey();
+
+                            break;
+
+                        case "3":
+
+                            break;
+
+                        case "4":
+                            Console.WriteLine(user);
+
+                            user.ChangeSettings(listUsers.AccauntExist);
+
+                            Console.WriteLine("Press any button");  
+                            Console.ReadKey();
+                            break;
+
+                        case "5":
+                            Console.WriteLine("Bye(");
+                            Environment.Exit(0);
+                            break;
+
+                        default:
+                            Console.WriteLine("Unknown command(");
+                            Thread.Sleep(1000);
+                            break;
+                    }
+
+                    listUsers.Save("data/usr/");
+                    quizzes.Save("data/test/");
+                }
 
             }
             catch(Exception e) 

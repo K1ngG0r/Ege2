@@ -34,7 +34,7 @@ namespace Ege
         {
             foreach (string files in Directory.GetFiles(path))
             {
-                if (Regex.IsMatch(files, "user"))
+                if (Regex.IsMatch(files, "quiz"))
                 {
                     Tests.Add(Quiz.Load(files));
                 }
@@ -45,5 +45,48 @@ namespace Ege
         {
             Tests.Add(quiz);
         }
+
+        public int IsExist(string name)
+        {
+            int i = 0;
+
+            foreach(var item in Tests)
+            {
+                if(item.Theme == name) 
+                    return i;
+                i++;
+            }
+
+            return -1;
+        }
+
+        public int Test(string name)
+        {
+            int poss = IsExist(name);
+
+            while (poss == -1)
+            {
+                Console.WriteLine("There is no such quiz, try again.");
+                poss = IsExist(Console.ReadLine());
+            }
+
+            return Tests[poss].Passing();
+        }
+
+        public override string ToString()
+        {
+            string name = "Available topics: \n";
+
+            int i = 0;
+
+            foreach (var item in Tests)
+            {
+                name += $"{i++}) {item.Theme}";
+            }
+
+            return name;
+        }
+
+
     }
 }

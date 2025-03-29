@@ -29,7 +29,7 @@ namespace Ege
 
             for (int i = 0; i < num; i++)
             {
-                Console.Write($"Enter the answer option №{i+1}: ");
+                Console.Write($"{i+1}): ");
                 question.Response.Add( Console.ReadLine() );
             }
 
