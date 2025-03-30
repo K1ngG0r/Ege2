@@ -1,29 +1,36 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Ege
 {
-    internal class Users
+    public class Users
     {
         public List<User> ListUsers { get; set; }
 
-        public Users() 
+        public Users()
         {
             ListUsers = new List<User>();
         }
 
+        public int IsExist(string name)
+        {
+            int i = 0;
+
+            foreach (var item in ListUsers)
+            {
+                if (item.Login == name)
+                    return i;
+                i++;
+            }
+
+            return -1;
+        }
+
         public int AccauntExist(string login)
         {
-            if (ListUsers == null) 
+            if (ListUsers == null)
                 return -1;
 
             for (int i = 0; i < ListUsers.Count; i++)
@@ -45,37 +52,37 @@ namespace Ege
 
             ListUsers.Add(user);
 
-            Console.WriteLine("You have successfully registered!");
+            Save("data/usr/");
 
             return user;
         }
 
-        public User LogIn()
+        public User LogIn(Users users)
         {
-            Console.Write("Enter login: ");
-            string login  = Console.ReadLine();
+            Console.Write("Введите логин: ");
+            string login = Console.ReadLine();
 
-            while(AccauntExist(login) == -1)
+            if (AccauntExist(login) == -1)
             {
-                Console.Write("There is no such login, try another one.\n" +
-                    "Enter login: ");
+                Console.Write("Такого логина нет, попробуй снова!.\n" +
+                    "Нажми любую кнопку");
 
-                login = Console.ReadLine();
+                Console.ReadKey();
+
+                return Menu.Registration(users);
             }
 
-            Console.Write("Enter password: ");
+            Console.Write("Введи пороль: ");
             string password = Console.ReadLine();
 
             int poss = AccauntExist(login);
 
             while (password != ListUsers[poss].Password)
             {
-                Console.Write("Incorrect password, please try again.\n" +
-                    "Enter password: ");
+                Console.Write("Некоректный пороль.\n" +
+                    "Введите пороль: ");
                 password = Console.ReadLine();
             }
-
-            Console.WriteLine("You have successfully logged in to your account");
 
             return ListUsers[poss];
         }
@@ -85,6 +92,9 @@ namespace Ege
             if (File.Exists(path))
                 throw new ArgumentException();
 
+            foreach (string filePath in Directory.GetFiles(path))
+                File.Delete(filePath);
+
             int i = 0;
 
             foreach (User user in ListUsers)
@@ -93,14 +103,24 @@ namespace Ege
             }
         }
 
-        public void Load(string path) 
+        public void Load(string path)
         {
-            foreach(string files in Directory.GetFiles(path))
+            foreach (string files in Directory.GetFiles(path))
             {
                 if (Regex.IsMatch(files, "user"))
                 {
                     ListUsers.Add(User.Load(files));
                 }
+            }
+        }
+
+        public void PrintUsers()
+        {
+            int i = 0;
+
+            foreach (var item in ListUsers)
+            {
+                Console.WriteLine($"{i++}) {item.Login}");
             }
         }
     }

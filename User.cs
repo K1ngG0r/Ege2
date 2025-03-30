@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 
 namespace Ege
 {
-    internal class User
+    public class User
     {
-        public string Login {  get; set; }
+        public string Login { get; set; }
         public string Password { get; set; }
-        public string DateOfBirth {  get; set; }
-        public bool IsAdm {  get; set; }
+        public string DateOfBirth { get; set; }
+        public bool IsAdm { get; set; }
 
         public Dictionary<string, int> Successes { get; set; } = new Dictionary<string, int>();
 
@@ -20,14 +20,14 @@ namespace Ege
         {
             string login;
 
-            Console.Write("Enter login: ");
+            Console.Write("Введите логин: ");
             login = Console.ReadLine();
 
             while (accayntExistDelegate(login) != -1)
             {
-                Console.WriteLine("Sorry, the username is busy, try another one.");
+                Console.WriteLine("Логин занят, попробуй другой.");
 
-                Console.Write("Enter login: ");
+                Console.Write("Введите логин: ");
                 login = Console.ReadLine();
             }
 
@@ -38,14 +38,14 @@ namespace Ege
         {
             string password;
 
-            Console.Write("Enter password: ");
+            Console.Write("Введите пароль: ");
             password = Console.ReadLine();
 
             while (password.Length < 5)
             {
-                Console.WriteLine("Sorry, your password is too short, at least 5 characters.");
+                Console.WriteLine("Пороль слишком короткий(минимум 5).");
 
-                Console.Write("Enter password: ");
+                Console.Write("Введите пароль: ");
                 password = Console.ReadLine();
             }
 
@@ -56,12 +56,12 @@ namespace Ege
         {
             string dateOfBirth;
 
-            Console.Write("Enter your birthday: ");
+            Console.Write("Введите дату рождения(дд.мм.гггг): ");
             dateOfBirth = Console.ReadLine();
 
             while (!Regex.IsMatch(dateOfBirth, @"^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(\d{4})$"))
             {
-                Console.Write("Incorrect format of date\nTry XX.XX.XXXX: ");
+                Console.Write("Некоректный формат \nНадо дд.мм.гггг: ");
 
                 dateOfBirth = Console.ReadLine();
             }
@@ -135,30 +135,36 @@ namespace Ege
 
         public override string ToString()
         {
-            return $"Login: {Login}\n" +
-                $"Password: {Password}\n" +
-                $"Date of birth: {DateOfBirth}\n";
+            return $"Логин: {Login}\n" +
+                $"Пароль: {Password}\n" +
+                $"День рождения: {DateOfBirth}";
         }
 
         public void PrintSuccesses()
         {
+            if(Successes.Count == 0)
+            {
+                Console.WriteLine("Успехов нет(");
+                return;
+            }
+
             foreach (var test in Successes)
             {
-                Console.WriteLine($"{test.Key, 10} : {test.Value, 10}");
+                Console.WriteLine($"{test.Key,10} : {test.Value,10}%");
             }
         }
 
         public void ChangeSettings(AccayntExistDelegate accayntExistDelegate)
         {
-            Console.Write("What do you want to change?\n" +
-                "1)Login\n" +
-                "2)Password\n" +
-                "3)Date of birth\n" +
-                "Choise: ");
+            Console.Write("Что поменять хотите?\n" +
+                "1)Логин\n" +
+                "2)Пароль\n" +
+                "3)День рождения\n" +
+                "Выбор: ");
 
             string choise = Console.ReadLine();
 
-            switch(choise)
+            switch (choise)
             {
                 case "1":
                     Login = SetLogin(accayntExistDelegate);
@@ -170,7 +176,7 @@ namespace Ege
                     DateOfBirth = SetDateOfBirth();
                     break;
                 default:
-                    Console.WriteLine("Unknown comamnd");
+                    Console.WriteLine("Неизвестая команда");
                     break;
             }
         }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Ege
 {
-    internal class Quizzes
+    public class Quizzes
     {
         public List<Quiz> Tests { get; set; }
 
@@ -19,14 +16,21 @@ namespace Ege
 
         public void Save(string path)
         {
-            if (File.Exists(path))
-                throw new ArgumentException();
+            if (!Directory.Exists(path))
+            {
+                Console.WriteLine(path);
+                throw new Exception();
+            }
+
+            foreach (string filePath in Directory.GetFiles(path))
+                File.Delete(filePath);
+
 
             int i = 0;
 
-            foreach (Quiz user in Tests)
+            foreach (Quiz quiz in Tests)
             {
-                user.Save($"{path}user({i++}).bin");
+                quiz.Save($"{path}quiz({i++}).bin");
             }
         }
 
@@ -50,9 +54,9 @@ namespace Ege
         {
             int i = 0;
 
-            foreach(var item in Tests)
+            foreach (var item in Tests)
             {
-                if(item.Theme == name) 
+                if (item.Theme == name)
                     return i;
                 i++;
             }
@@ -62,31 +66,21 @@ namespace Ege
 
         public int Test(string name)
         {
-            int poss = IsExist(name);
-
-            while (poss == -1)
-            {
-                Console.WriteLine("There is no such quiz, try again.");
-                poss = IsExist(Console.ReadLine());
-            }
-
-            return Tests[poss].Passing();
+            return Tests[IsExist(name)].Passing();
         }
 
         public override string ToString()
         {
-            string name = "Available topics: \n";
+            string name = "Доступные тесты: \n";
 
             int i = 0;
 
             foreach (var item in Tests)
             {
-                name += $"{i++}) {item.Theme}";
+                name += $"{i++}) {item.Theme}\n";
             }
 
             return name;
         }
-
-
     }
 }

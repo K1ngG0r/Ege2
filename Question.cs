@@ -1,39 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Ege
 {
-    internal class Question
+    public class Question
     {
         public string Issue { get; set; }
-        public List<string> Response {  get; set; }
+        public List<string> Response { get; set; }
         public string Right { get; set; }
 
 
         public Question()
         {
-            Response = new List<string>();   
+            Response = new List<string>();
         }
         public static Question Create()
         {
             Question question = new Question();
 
-            Console.Write("Enter question: ");
+            Console.Write("Введите вопрос: ");
             question.Issue = Console.ReadLine();
 
-            Console.Write("Enter the number of possible answers: ");
+            Console.Write("Введите количество ответов: ");
             int num = int.Parse(Console.ReadLine());
 
             for (int i = 0; i < num; i++)
             {
-                Console.Write($"{i+1}): ");
-                question.Response.Add( Console.ReadLine() );
+                Console.Write($"{i + 1}) ");
+                question.Response.Add(Console.ReadLine());
             }
 
-            Console.Write("Enter the correct option number: ");
+            Console.Write("Введите правильный ответ: ");
             question.Right = Console.ReadLine();
 
             return question;
@@ -50,12 +48,28 @@ namespace Ege
                 Console.WriteLine($"{i++}) {item}");
             }
 
-            Console.Write("Your answer option: ");    
-            
-            if(Console.ReadLine() == Right)
+            Console.Write("Твой вариант ответа: ");
+
+            if (Console.ReadLine() == Right)
                 return true;
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            string n = Issue;
+
+            int i = 1;
+
+            foreach (var item in Response)
+            {
+                n += $"\n{i++}) {item}";
+            }
+
+            n += $"\nПравильный ответ: {Right}";
+
+            return n;
         }
     }
 }
